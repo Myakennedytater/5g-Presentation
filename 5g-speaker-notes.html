@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>5G Presentation — Speaker Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --card: #ffffff;
+    --accent: #1a3a5c;
+    --accent2: #c8832a;
+    --border: #e0dbd0;
+    --text: #1e1e1e;
+    --muted: #666;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px 18px 100px;
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, #1a3a5c, #0d2238);
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .page-header .kicker {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #c8832a;
+    margin-bottom: 8px;
+  }
+
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+  }
+
+  /* NAV */
+  #nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+  }
+
+  #nav button {
+    background: none;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 8px 22px;
+    border-radius: 30px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #nav button:hover { background: rgba(255,255,255,0.15); }
+  #nav button:disabled { opacity: 0.3; cursor: default; }
+
+  #slide-counter {
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* SLIDES */
+  .slide { display: none; animation: fadeIn 0.3s ease; }
+  .slide.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SLIDE CARD */
+  .slide-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .slide-card-header {
+    background: var(--accent);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .slide-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent2);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .slide-card-header-text { flex: 1; }
+
+  .slide-card-header .section-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 2px;
+  }
+
+  .slide-card-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: #fff;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .notes-body {
+    padding: 18px;
+  }
+
+  .notes-body p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #333;
+    font-weight: 300;
+  }
+
+  /* Swipe hint */
+  .swipe-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    margin-top: 16px;
+    padding-bottom: 4px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 20px 0 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent2);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="kicker">For Presenter Only</div>
+  <h1>Speaker Notes</h1>
+  <p>5G Technology Presentation — 13 Slides</p>
+</div>
+
+<!-- SLIDE 1 -->
+<div class="slide active" id="s1">
+  <div class="progress-bar"><div class="progress-fill" style="width:7.7%"></div></div>
+  <div class="progress-label">Slide 1 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">1</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Introduction</div>
+        <h2>Title Slide</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Welcome the audience. This presentation covers 5G technology from its technical foundations through its theological implications. Emphasize that 5G is not merely an incremental improvement — it represents a paradigm shift in how devices, people, and systems communicate. Invite the audience to consider not just the practical questions but the deeper human and spiritual ones as well.</p>
+    </div>
+  </div>
+  <div class="swipe-hint">← swipe to navigate →</div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide" id="s2">
+  <div class="progress-bar"><div class="progress-fill" style="width:15.4%"></div></div>
+  <div class="progress-label">Slide 2 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">2</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 1 — Definition</div>
+        <h2>Defining 5G</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Stress that 5G is not just "faster 4G." The latency reduction is arguably more important than speed for many applications — it enables real-time control of distant machines and instantaneous cloud computing. Explain mmWave simply: think of it like a super-powerful flashlight — blindingly bright up close, but blocked easily by walls or rain. The three-band structure is why 5G experiences vary so dramatically by carrier and location.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide" id="s3">
+  <div class="progress-bar"><div class="progress-fill" style="width:23.1%"></div></div>
+  <div class="progress-label">Slide 3 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">3</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 1 — History</div>
+        <h2>The Generations of Wireless</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Each generation is roughly a 10-year cycle. Note that 3GPP (3rd Generation Partnership Project) is the standards body that defines each generation. 5G standardization began around 2015, with the first commercial launches in 2019. South Korea (with carriers SK Telecom, KT, and LG U+) beat the US to market by hours on April 3, 2019. China has deployed more 5G base stations than any other country. The ITU (International Telecommunication Union) formally ratified the 5G standard as "IMT-2020."</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- SLIDE 5 -->
+<div class="slide" id="s4">
+  <div class="progress-bar"><div class="progress-fill" style="width:30.8%"></div></div>
+  <div class="progress-label">Slide 4 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">4</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 2 — Current Applications</div>
+        <h2>Current Commercial Applications</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>As of 2025, Fixed Wireless Access is one of the biggest commercial successes — T-Mobile has over 5 million FWA subscribers. Many of 5G's most transformative uses are still emerging; current commercial deployment is largely eMBB (fast phones) and FWA. Private 5G networks are growing rapidly in manufacturing — they allow secure, low-latency communication on the factory floor without relying on public carriers. The FirstNet network (AT&T) uses 5G for emergency services communications.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide" id="s5">
+  <div class="progress-bar"><div class="progress-fill" style="width:38.5%"></div></div>
+  <div class="progress-label">Slide 5 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">5</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 2 — Current Applications</div>
+        <h2>Healthcare &amp; Mobility Today</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>The remote surgery example is a powerful illustration of 5G's latency advantage — traditional internet or 4G introduces enough delay to make precise robotic surgery dangerous. 5G's sub-millisecond latency essentially eliminates perceptible lag. V2X is still largely in pilot phases in the US but is further along in China and Europe. Smart cities face public acceptance challenges around data privacy — worth raising in discussion.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6 -->
+<div class="slide" id="s6">
+  <div class="progress-bar"><div class="progress-fill" style="width:46.2%"></div></div>
+  <div class="progress-label">Slide 6 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">6</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 3 — Future Applications</div>
+        <h2>Future Commercial Applications</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Be transparent that some of these projections are speculative — timelines in technology often slip. The IoT projections come from Ericsson's Mobility Report and Cisco's Annual Internet Report. Level 5 autonomy (no human needed at all) remains elusive; most industry experts now project 2030+ for meaningful deployment. The XR/metaverse vision took a setback with Meta's losses, but the underlying technology trend remains. Edge computing is perhaps the most underappreciated aspect of 5G's potential — it fundamentally changes the economics of AI.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7 -->
+<div class="slide" id="s7">
+  <div class="progress-bar"><div class="progress-fill" style="width:53.8%"></div></div>
+  <div class="progress-label">Slide 7 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">7</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 3 — Future Applications</div>
+        <h2>Healthcare, Industry &amp; Beyond</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>The digital divide point is crucial for any audience considering equity and justice dimensions. Countries like Rwanda and Nigeria are investing heavily in 5G as a development leapfrog strategy — skipping costly fiber infrastructure. The McKinsey figure is from their "The Internet of Things: Mapping the Value Beyond the Hype" report. Acknowledge that 6G research at Samsung, NTT, and university labs suggests the 5G era may transition faster than expected.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8 -->
+<div class="slide" id="s8">
+  <div class="progress-bar"><div class="progress-fill" style="width:61.5%"></div></div>
+  <div class="progress-label">Slide 8 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">8</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 4 — Theological Implications</div>
+        <h2>Theological Implications of 5G</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Frame this section carefully: the goal is not technophobia or technophilia, but theological discernment. Reference Albert Borgmann's "technology as device paradigm" or Neil Postman's "Technopoly" as frameworks if the audience is academic. For a general audience, simply note that Christians have always had to ask: "What does faithful engagement with this new power look like?" Consider drawing the parallel to how the Church had to theologically reckon with the printing press — which both democratized Scripture and spread heresy simultaneously.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9 -->
+<div class="slide" id="s9">
+  <div class="progress-bar"><div class="progress-fill" style="width:69.2%"></div></div>
+  <div class="progress-label">Slide 9 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">9</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 4 — Theological Implications</div>
+        <h2>Human Dignity &amp; Surveillance</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Shoshana Zuboff's "The Age of Surveillance Capitalism" is an excellent secular resource here. From a theological angle, Stanley Hauerwas and Walter Brueggemann both address the prophetic responsibility to name and resist dehumanizing systems. Note that the concern cuts across political lines — libertarians, progressives, and religious conservatives all share concerns about surveillance. The question isn't whether to use 5G, but what policies and ethical frameworks must govern it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 -->
+<div class="slide" id="s10">
+  <div class="progress-bar"><div class="progress-fill" style="width:76.9%"></div></div>
+  <div class="progress-label">Slide 10 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">10</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 4 — Theological Implications</div>
+        <h2>Community, Presence &amp; Embodiment</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>This is one of the most pastorally rich areas. Acknowledge the genuine good of connectivity for the homebound, geographically isolated, or disabled — 5G-enabled church participation for these groups is a genuine blessing. The tension is between accessibility and substitution. Draw on Dietrich Bonhoeffer's "Life Together" — Christian community is necessarily physical, local, and personal. John Dyer's "From the Garden to the City" is an excellent theological resource on technology and embodiment. Avoid being dismissive of digital ministry while being honest about its limitations.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11 -->
+<div class="slide" id="s11">
+  <div class="progress-bar"><div class="progress-fill" style="width:84.6%"></div></div>
+  <div class="progress-label">Slide 11 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">11</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 4 — Theological Implications</div>
+        <h2>Justice, Equity &amp; Creation Care</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>The justice dimension connects directly to Amos, Micah, and Luke's "preferential option for the poor." The FCC's rural broadband programs and the Biden-era Infrastructure Bill's $65B broadband investment represent government recognition that connectivity is now infrastructure. From a creation care perspective, cite the Lausanne Movement's "Creation Care" commitment or Pope Francis' Laudato Si'. Note that 5G networks can also enable environmental monitoring and smart energy grids — technology itself is not the enemy of creation care.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12 -->
+<div class="slide" id="s12">
+  <div class="progress-bar"><div class="progress-fill" style="width:92.3%"></div></div>
+  <div class="progress-label">Slide 12 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">12</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Section 4 — Theological Implications</div>
+        <h2>Sabbath, Rest &amp; the Pace of Life</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Reference Brueggemann's "Sabbath as Resistance" directly — it's accessible and profound. The "attention economy" framing comes from tech ethicist Tristan Harris (Center for Humane Technology). From a spiritual direction perspective, Ignatius of Loyola's "discernment of spirits" and contemporary writers like Andy Crouch ("The Tech-Wise Family") offer practical wisdom. Invite the audience: what does a digital Sabbath look like for your family or community? This is the most personally actionable theological implication.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13 -->
+<div class="slide" id="s13">
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+  <div class="progress-label">Slide 13 of 13</div>
+  <div class="slide-card">
+    <div class="slide-card-header">
+      <div class="slide-num">13</div>
+      <div class="slide-card-header-text">
+        <div class="section-tag">Conclusion</div>
+        <h2>Faithful Engagement with 5G</h2>
+      </div>
+    </div>
+    <div class="notes-body">
+      <p>Close by returning to the central framework: the question is not whether to use 5G, but how to use it wisely. Recommend resources: Andy Crouch's "The Tech-Wise Family," Shoshana Zuboff's "The Age of Surveillance Capitalism," and Walter Brueggemann's "Sabbath as Resistance." Invite discussion — these are unresolved questions the Church must work through together. End with prayer if appropriate to the context, asking for wisdom and discernment in stewarding the powerful tools of this generation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <span id="slide-counter">1 / 13</span>
+  <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = 13;
+
+  function changeSlide(dir) {
+    document.getElementById('s' + current).classList.remove('active');
+    current += dir;
+    document.getElementById('s' + current).classList.add('active');
+    document.getElementById('slide-counter').textContent = current + ' / ' + total;
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === total;
+    window.scrollTo(0, 0);
+  }
+
+  // Swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) {
+      if (dx < 0 && current < total) changeSlide(1);
+      if (dx > 0 && current > 1) changeSlide(-1);
+    }
+  });
+</script>
+</body>
+</html>
