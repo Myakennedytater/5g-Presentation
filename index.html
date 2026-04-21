@@ -14,457 +14,198 @@
     --text: #1e1e1e;
     --muted: #666;
     --border: #e0dbd0;
-    --notes-bg: #fffdf5;
-    --notes-border: #c8832a;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-  body {
-    font-family: 'Source Sans 3', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
+  /* ── PARTICLE CANVAS ── */
+  #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; display: none; }
 
-  /* NAV */
+  /* ── NAV ── */
   #nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--accent);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    z-index: 100;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--accent); display: flex;
+    justify-content: space-between; align-items: center;
+    padding: 12px 20px; z-index: 200;
     box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
   }
-
   #nav button {
-    background: none;
-    border: 1.5px solid rgba(255,255,255,0.4);
-    color: #fff;
-    padding: 8px 22px;
-    border-radius: 30px;
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-    transition: background 0.2s, border-color 0.2s;
+    background: none; border: 1.5px solid rgba(255,255,255,0.4);
+    color: #fff; padding: 8px 22px; border-radius: 30px;
+    font-family: 'Source Sans 3', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
   }
-
-  #nav button:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.8); }
+  #nav button:hover { background: rgba(255,255,255,0.15); }
   #nav button:disabled { opacity: 0.3; cursor: default; }
+  #slide-counter { color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 300; min-width: 60px; text-align: center; }
 
-  #slide-counter {
-    color: rgba(255,255,255,0.8);
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    min-width: 60px;
-    text-align: center;
-  }
+  /* ── PROGRESS BAR ── */
+  #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent2); z-index: 300; transition: width 0.4s ease; width: 0%; }
 
-  /* SLIDES */
-  .slide {
-    display: none;
-    min-height: calc(100vh - 58px);
-    padding: 28px 20px 80px;
-    animation: fadeIn 0.35s ease;
-  }
-  .slide.active { display: block; }
+  /* ── SLIDES ── */
+  .slide { display: none; min-height: calc(100vh - 58px); padding: 28px 20px 80px; position: relative; z-index: 1; }
+  .slide.active { display: block; animation: slideIn 0.5s cubic-bezier(0.22,1,0.36,1); }
+  .slide.exit { animation: slideOut 0.3s ease forwards; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(40px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
+  @keyframes slideOut { from { opacity: 1; } to { opacity: 0; transform: translateX(-30px); } }
 
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* SLIDE LABEL */
-  .slide-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 6px;
-  }
-
-  /* TITLE SLIDE */
+  /* ── TITLE SLIDE ── */
   .slide-title-main {
     background: linear-gradient(160deg, #1a3a5c 0%, #0d2238 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: calc(100vh - 58px);
-    padding: 48px 28px 90px;
-    position: relative;
-    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: flex-start; min-height: calc(100vh - 58px);
+    padding: 48px 28px 90px; position: relative; overflow: hidden;
   }
-
   .slide-title-main::before {
-    content: '5G';
-    position: absolute;
-    right: -20px;
-    bottom: 60px;
-    font-family: 'Playfair Display', serif;
-    font-size: 220px;
-    font-weight: 900;
-    color: rgba(255,255,255,0.04);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
+    content: '5G'; position: absolute; right: -20px; bottom: 60px;
+    font-family: 'Playfair Display', serif; font-size: 220px; font-weight: 900;
+    color: rgba(255,255,255,0.04); line-height: 1; pointer-events: none;
+    animation: floatBg 6s ease-in-out infinite;
   }
+  @keyframes floatBg { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-  .slide-title-main .kicker {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 18px;
-  }
+  .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent2); margin-bottom: 18px; opacity: 0; animation: fadeUp 0.6s 0.2s forwards; }
+  .slide-title-main h1 { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 18px; opacity: 0; animation: fadeUp 0.6s 0.4s forwards; text-shadow: 0 0 60px rgba(200,131,42,0.3); }
+  .subtitle { font-size: 16px; color: rgba(255,255,255,0.65); font-weight: 300; line-height: 1.6; max-width: 320px; margin-bottom: 36px; opacity: 0; animation: fadeUp 0.6s 0.6s forwards; }
+  .agenda { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  .agenda-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; opacity: 0; animation: fadeUp 0.5s forwards; transition: background 0.2s, transform 0.2s; }
+  .agenda-item:hover { background: rgba(255,255,255,0.13); transform: translateX(4px); }
+  .agenda-item:nth-child(1) { animation-delay: 0.7s; }
+  .agenda-item:nth-child(2) { animation-delay: 0.85s; }
+  .agenda-item:nth-child(3) { animation-delay: 1.0s; }
+  .agenda-item:nth-child(4) { animation-delay: 1.15s; }
+  .agenda-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent2); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .agenda-item span { color: rgba(255,255,255,0.85); font-size: 14px; }
 
-  .slide-title-main h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 52px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.05;
-    margin-bottom: 18px;
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  .slide-title-main .subtitle {
-    font-size: 16px;
-    color: rgba(255,255,255,0.65);
-    font-weight: 300;
-    line-height: 1.6;
-    max-width: 320px;
-    margin-bottom: 36px;
-  }
+  /* ── GLOW ORBS on title ── */
+  .orb { position: absolute; border-radius: 50%; filter: blur(60px); pointer-events: none; animation: orbFloat 8s ease-in-out infinite; }
+  .orb1 { width: 200px; height: 200px; background: rgba(200,131,42,0.15); top: 10%; right: -50px; animation-delay: 0s; }
+  .orb2 { width: 150px; height: 150px; background: rgba(26,58,92,0.4); bottom: 20%; left: -30px; animation-delay: 3s; }
+  @keyframes orbFloat { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(10px,-20px) scale(1.1); } }
 
-  .slide-title-main .agenda {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
+  /* ── SLIDE LABEL ── */
+  .slide-label { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
 
-  .agenda-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 12px 16px;
-  }
+  /* ── HEADINGS ── */
+  h2 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1.15; margin-bottom: 20px; }
 
-  .agenda-num {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: var(--accent2);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .agenda-item span {
-    color: rgba(255,255,255,0.85);
-    font-size: 14px;
-    font-weight: 400;
-  }
-
-  /* CONTENT SLIDES */
-  h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px;
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1.15;
-    margin-bottom: 20px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-
-  .card-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 8px;
-  }
-
-  .card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .card p, .card li {
-    font-size: 14px;
-    line-height: 1.65;
-    color: #444;
-    font-weight: 300;
-  }
-
+  /* ── CARDS ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,58,92,0.1); }
+  .card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent2); margin-bottom: 8px; }
+  .card p, .card li { font-size: 14px; line-height: 1.65; color: #444; font-weight: 300; }
   .card ul { padding-left: 18px; }
   .card li { margin-bottom: 5px; }
 
-  /* TIMELINE */
-  .timeline { display: flex; flex-direction: column; gap: 0; }
+  /* ── SECTION HEADER ── */
+  .section-header { background: linear-gradient(135deg, var(--accent) 0%, #0d2238 100%); border-radius: 16px; padding: 24px 20px; margin-bottom: 18px; position: relative; overflow: hidden; }
+  .section-header::after { content: attr(data-num); position: absolute; right: 10px; bottom: -10px; font-family: 'Playfair Display', serif; font-size: 100px; font-weight: 900; color: rgba(255,255,255,0.06); line-height: 1; pointer-events: none; }
+  .section-header .sh-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent2); margin-bottom: 8px; }
+  .section-header h2 { color: #fff; font-size: 26px; margin-bottom: 0; }
 
-  .timeline-item {
-    display: flex;
-    gap: 14px;
-    padding-bottom: 18px;
-    position: relative;
-  }
+  /* ── STATS ── */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .stat-card { background: var(--accent); border-radius: 14px; padding: 16px 14px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s; }
+  .stat-card:hover { transform: scale(1.03); }
+  .stat-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent); }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 400; line-height: 1.4; }
 
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 19px; top: 32px; bottom: 0;
-    width: 2px;
-    background: var(--border);
-  }
-
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; }
+  .timeline-item { display: flex; gap: 14px; padding-bottom: 18px; position: relative; opacity: 0; animation: fadeUp 0.5s forwards; }
+  .timeline-item:nth-child(1){animation-delay:0.1s} .timeline-item:nth-child(2){animation-delay:0.2s}
+  .timeline-item:nth-child(3){animation-delay:0.3s} .timeline-item:nth-child(4){animation-delay:0.4s}
+  .timeline-item:nth-child(5){animation-delay:0.5s}
+  .timeline-item::before { content: ''; position: absolute; left: 19px; top: 32px; bottom: 0; width: 2px; background: var(--border); }
   .timeline-item:last-child::before { display: none; }
-
-  .tl-dot {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    letter-spacing: -0.02em;
-    box-shadow: 0 2px 8px rgba(26,58,92,0.25);
-  }
-
+  .tl-dot { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(26,58,92,0.25); transition: transform 0.2s, box-shadow 0.2s; }
+  .tl-dot:hover { transform: scale(1.15); box-shadow: 0 4px 16px rgba(26,58,92,0.4); }
   .tl-content { padding-top: 6px; }
   .tl-content strong { font-size: 15px; color: var(--accent); font-weight: 600; display: block; margin-bottom: 4px; }
   .tl-content p { font-size: 13px; color: #555; line-height: 1.55; font-weight: 300; }
 
-  /* STAT BLOCKS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
+  /* ── PILLS ── */
+  .app-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .app-pill { background: var(--card); border: 1.5px solid var(--border); border-radius: 30px; padding: 7px 14px; font-size: 13px; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 6px; transition: all 0.2s; cursor: default; }
+  .app-pill:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: scale(1.05); }
+  .app-pill:hover .dot { background: var(--accent2); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
 
-  .stat-card {
-    background: var(--accent);
+  /* ── PULL QUOTE ── */
+  .pull-quote { background: var(--accent); border-radius: 14px; padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+  .pull-quote::before { content: '"'; position: absolute; top: -10px; left: 10px; font-size: 80px; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.06); line-height: 1; }
+  .pull-quote p { font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; color: #fff; line-height: 1.55; margin-bottom: 10px; }
+  .pull-quote cite { font-size: 12px; color: rgba(255,255,255,0.6); font-style: normal; font-weight: 600; }
+
+  /* ── HIGHLIGHT ── */
+  .highlight-box { background: #fff8ed; border: 1.5px solid #f0c070; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .highlight-box p { font-size: 14px; line-height: 1.6; color: #7a4f00; }
+
+  /* ── DIVIDER ── */
+  .divider { width: 40px; height: 3px; background: var(--accent2); border-radius: 2px; margin-bottom: 18px; }
+
+  /* ── 3D NETWORK SVG on title ── */
+  .network-svg { position: absolute; bottom: 80px; right: 0; width: 200px; height: 200px; opacity: 0.15; pointer-events: none; }
+
+  /* ── SCROLL HINT ── */
+  .scroll-hint { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0 0; }
+
+
+  /* ── IMAGES ── */
+  .slide-img {
+    width: 100%;
     border-radius: 14px;
-    padding: 16px 14px;
-    text-align: center;
-  }
-
-  .stat-card .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .stat-card .stat-label {
-    font-size: 11px;
-    color: rgba(255,255,255,0.7);
-    font-weight: 400;
-    line-height: 1.4;
-  }
-
-  /* APPLICATION PILLS */
-  .app-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     margin-bottom: 14px;
+    object-fit: cover;
+    max-height: 200px;
+    box-shadow: 0 4px 20px rgba(26,58,92,0.15);
+    display: block;
   }
-
-  .app-pill {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 30px;
-    padding: 7px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    display: flex; align-items: center; gap: 6px;
-  }
-
-  .app-pill .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent2);
-    flex-shrink: 0;
-  }
-
-  /* DIVIDER */
-  .divider {
-    width: 40px;
-    height: 3px;
-    background: var(--accent2);
-    border-radius: 2px;
-    margin-bottom: 18px;
-  }
-
-  /* SPEAKER NOTES */
-  .notes-toggle {
-    background: none;
-    border: 1.5px solid var(--notes-border);
-    color: var(--accent2);
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    padding: 8px 16px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-top: 18px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .notes-toggle::before { content: '📝'; font-size: 13px; }
-
-  .notes-box {
-    display: none;
-    background: var(--notes-bg);
-    border-left: 3px solid var(--notes-border);
-    border-radius: 0 10px 10px 0;
-    padding: 16px;
-    margin-top: 12px;
-  }
-
-  .notes-box.open { display: block; }
-
-  .notes-box p {
-    font-size: 13px;
-    line-height: 1.7;
-    color: #555;
-    font-weight: 300;
-  }
-
-  .notes-title {
+  .img-caption {
     font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 8px;
-  }
-
-  /* SECTION HEADER */
-  .section-header {
-    background: linear-gradient(135deg, var(--accent) 0%, #0d2238 100%);
-    border-radius: 16px;
-    padding: 24px 20px;
-    margin-bottom: 18px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .section-header::after {
-    content: attr(data-num);
-    position: absolute;
-    right: 10px; bottom: -10px;
-    font-family: 'Playfair Display', serif;
-    font-size: 100px;
-    font-weight: 900;
-    color: rgba(255,255,255,0.06);
-    line-height: 1;
-    pointer-events: none;
-  }
-
-  .section-header .sh-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 8px;
-  }
-
-  .section-header h2 {
-    color: #fff;
-    font-size: 26px;
-    margin-bottom: 0;
-  }
-
-  /* QUOTE */
-  .pull-quote {
-    background: var(--accent);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 14px;
-  }
-
-  .pull-quote p {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    font-style: italic;
-    color: #fff;
-    line-height: 1.55;
-    margin-bottom: 10px;
-  }
-
-  .pull-quote cite {
-    font-size: 12px;
-    color: rgba(255,255,255,0.6);
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-  }
-
-  /* HIGHLIGHT BOX */
-  .highlight-box {
-    background: #fff8ed;
-    border: 1.5px solid #f0c070;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-  }
-
-  .highlight-box p {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #7a4f00;
-  }
-
-  /* SCROLL HINT */
-  .scroll-hint {
-    text-align: center;
-    font-size: 11px;
     color: var(--muted);
-    padding: 8px 0 0;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 14px;
     letter-spacing: 0.05em;
   }
+  /* ── COUNTER animation ── */
+  .counter { display: inline-block; }
 </style>
 </head>
 <body>
 
-<!-- ===== SLIDE 1: TITLE ===== -->
+<div id="progress-bar"></div>
+<canvas id="particles"></canvas>
+
+<!-- SLIDE 1: TITLE -->
 <div class="slide active" id="slide-1">
   <div class="slide-title-main">
-    <div class="kicker">Technology Series</div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <svg class="network-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="white" fill="white">
+        <circle cx="100" cy="100" r="4"><animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="40" cy="50" r="3"><animate attributeName="r" values="3;5;3" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="60" r="3"><animate attributeName="r" values="3;5;3" dur="3.5s" repeatCount="indefinite"/></circle>
+        <circle cx="50" cy="150" r="3"><animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="165" cy="150" r="3"><animate attributeName="r" values="3;5;3" dur="4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="30" r="2"><animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite"/></circle>
+        <line x1="100" y1="100" x2="40" y2="50" stroke-width="0.5" opacity="0.6"/>
+        <line x1="100" y1="100" x2="160" y2="60" stroke-width="0.5" opacity="0.6"/>
+        <line x1="100" y1="100" x2="50" y2="150" stroke-width="0.5" opacity="0.6"/>
+        <line x1="100" y1="100" x2="165" y2="150" stroke-width="0.5" opacity="0.6"/>
+        <line x1="100" y1="100" x2="100" y2="30" stroke-width="0.5" opacity="0.6"/>
+        <line x1="40" y1="50" x2="100" y2="30" stroke-width="0.3" opacity="0.4"/>
+        <line x1="160" y1="60" x2="100" y2="30" stroke-width="0.3" opacity="0.4"/>
+        <line x1="40" y1="50" x2="50" y2="150" stroke-width="0.3" opacity="0.4"/>
+        <line x1="160" y1="60" x2="165" y2="150" stroke-width="0.3" opacity="0.4"/>
+      </g>
+    </svg>
+    <div class="kicker">Technology Series · BUS 670</div>
     <h1>5G</h1>
     <p class="subtitle">The fifth generation of wireless technology — and what it means for society, commerce, and faith.</p>
     <div class="agenda">
@@ -474,14 +215,9 @@
       <div class="agenda-item"><div class="agenda-num">4</div><span>Theological Implications</span></div>
     </div>
   </div>
-  <button class="notes-toggle" onclick="toggleNotes('n1')">Speaker Notes</button>
-  <div class="notes-box" id="n1">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Welcome the audience. This presentation covers 5G technology from its technical foundations through its theological implications. Emphasize that 5G is not merely an incremental improvement — it represents a paradigm shift in how devices, people, and systems communicate. Invite the audience to consider not just the practical questions but the deeper human and spiritual ones as well.</p>
-  </div>
 </div>
 
-<!-- ===== SLIDE 2: DEFINITION ===== -->
+<!-- SLIDE 2: DEFINITION -->
 <div class="slide" id="slide-2">
   <div class="slide-label">Section 1 — Definition</div>
   <div class="section-header" data-num="1">
@@ -493,9 +229,9 @@
     <p>5G is the fifth generation of mobile network technology, succeeding 4G LTE. It is defined by three capabilities: extreme speed, ultra-low latency, and massive device connectivity — enabling a fundamentally new class of applications.</p>
   </div>
   <div class="stats-row">
-    <div class="stat-card"><div class="stat-num">20×</div><div class="stat-label">faster peak speed vs. 4G</div></div>
+    <div class="stat-card"><div class="stat-num"><span class="counter" data-target="20">0</span>×</div><div class="stat-label">faster peak speed vs. 4G</div></div>
     <div class="stat-card"><div class="stat-num">&lt;1ms</div><div class="stat-label">latency (vs. ~50ms on 4G)</div></div>
-    <div class="stat-card"><div class="stat-num">1M+</div><div class="stat-label">devices per km²</div></div>
+    <div class="stat-card"><div class="stat-num"><span class="counter" data-target="1">0</span>M+</div><div class="stat-label">devices per km²</div></div>
     <div class="stat-card"><div class="stat-num">10 Gbps</div><div class="stat-label">theoretical peak speed</div></div>
   </div>
   <div class="card">
@@ -506,66 +242,31 @@
       <li><strong>mmWave (24–100 GHz):</strong> Extreme speed, short range, dense urban use</li>
     </ul>
   </div>
-  <button class="notes-toggle" onclick="toggleNotes('n2')">Speaker Notes</button>
-  <div class="notes-box" id="n2">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Stress that 5G is not just "faster 4G." The latency reduction is arguably more important than speed for many applications — it enables real-time control of distant machines and instantaneous cloud computing. Explain mmWave simply: think of it like a super-powerful flashlight — blindingly bright up close, but blocked easily by walls or rain. The three-band structure is why 5G experiences vary so dramatically by carrier and location.</p>
-  </div>
 </div>
 
-<!-- ===== SLIDE 3: HISTORY ===== -->
+<!-- SLIDE 3: HISTORY -->
 <div class="slide" id="slide-3">
   <div class="slide-label">Section 1 — History</div>
   <h2>The Generations of Wireless</h2>
   <div class="divider"></div>
   <div class="timeline">
-    <div class="timeline-item">
-      <div class="tl-dot">1G</div>
-      <div class="tl-content"><strong>1980s — Analog Voice</strong><p>First cellular networks (AMPS in the US). Voice calls only, no encryption, large "brick" phones.</p></div>
-    </div>
-    <div class="timeline-item">
-      <div class="tl-dot">2G</div>
-      <div class="tl-content"><strong>1991 — Digital Voice + SMS</strong><p>GSM standard introduced digital calls. SMS texting born. First mobile data (GPRS). Introduced encryption.</p></div>
-    </div>
-    <div class="timeline-item">
-      <div class="tl-dot">3G</div>
-      <div class="tl-content"><strong>2001 — Mobile Internet</strong><p>UMTS/WCDMA brought broadband data. Enabled smartphones, email on the go, and early app stores.</p></div>
-    </div>
-    <div class="timeline-item">
-      <div class="tl-dot">4G</div>
-      <div class="tl-content"><strong>2009 — The Smartphone Era</strong><p>LTE enabled HD video streaming, app economy explosion, Uber, Netflix, Instagram — modern mobile life.</p></div>
-    </div>
-    <div class="timeline-item">
-      <div class="tl-dot">5G</div>
-      <div class="tl-content"><strong>2019–Present — Connected Everything</strong><p>First commercial rollouts in South Korea and the US (April 2019). Now in 100+ countries. Standardized by 3GPP Release 15–17.</p></div>
-    </div>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n3')">Speaker Notes</button>
-  <div class="notes-box" id="n3">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Each generation is roughly a 10-year cycle. Note that 3GPP (3rd Generation Partnership Project) is the standards body that defines each generation. 5G standardization began around 2015, with the first commercial launches in 2019. South Korea (with carriers SK Telecom, KT, and LG U+) beat the US to market by hours on April 3, 2019. China has deployed more 5G base stations than any other country. The ITU (International Telecommunication Union) formally ratified the 5G standard as "IMT-2020."</p>
+    <div class="timeline-item"><div class="tl-dot">1G</div><div class="tl-content"><strong>1980s — Analog Voice</strong><p>First cellular networks (AMPS in the US). Voice calls only, no encryption, large "brick" phones.</p></div></div>
+    <div class="timeline-item"><div class="tl-dot">2G</div><div class="tl-content"><strong>1991 — Digital Voice + SMS</strong><p>GSM standard introduced digital calls. SMS texting born. First mobile data (GPRS). Introduced encryption.</p></div></div>
+    <div class="timeline-item"><div class="tl-dot">3G</div><div class="tl-content"><strong>2001 — Mobile Internet</strong><p>UMTS/WCDMA brought broadband data. Enabled smartphones, email on the go, and early app stores.</p></div></div>
+    <div class="timeline-item"><div class="tl-dot">4G</div><div class="tl-content"><strong>2009 — The Smartphone Era</strong><p>LTE enabled HD video streaming, app economy explosion, Uber, Netflix, Instagram — modern mobile life.</p></div></div>
+    <div class="timeline-item"><div class="tl-dot">5G</div><div class="tl-content"><strong>2019–Present — Connected Everything</strong><p>First commercial rollouts in South Korea and the US (April 2019). Now in 100+ countries. Standardized by 3GPP Release 15–17.</p></div></div>
   </div>
 </div>
 
-<!-- ===== SLIDE 4: CURRENT APPLICATIONS ===== -->
+
+<!-- SLIDE 5: CURRENT APPLICATIONS -->
 <div class="slide" id="slide-4">
   <div class="slide-label">Section 2 — Current Applications</div>
-  <div class="section-header" data-num="2">
-    <div class="sh-label">Today's Use Cases</div>
-    <h2>Current Commercial Applications</h2>
-  </div>
-  <div class="card">
-    <div class="card-label">Enhanced Mobile Broadband (eMBB)</div>
-    <p>The most widely deployed use case. Faster speeds for consumers — HD streaming, cloud gaming (Xbox Cloud, GeForce Now), and improved video calls. The most visible 5G benefit today.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Fixed Wireless Access (FWA)</div>
-    <p>5G as a home internet replacement. T-Mobile Home Internet and Verizon Home Internet serve millions of households — especially in underserved rural and suburban areas lacking fiber.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Industrial &amp; Private Networks</div>
-    <p>Factories, ports, and warehouses deploy private 5G networks. BMW, Ford, and Amazon have deployed 5G on factory floors for real-time automation and asset tracking.</p>
-  </div>
+  <div class="section-header" data-num="2"><div class="sh-label">Today's Use Cases</div><h2>Current Commercial Applications</h2></div>
+  <div class="card"><div class="card-label">Enhanced Mobile Broadband (eMBB)</div><p>The most widely deployed use case. Faster speeds for consumers — HD streaming, cloud gaming (Xbox Cloud, GeForce Now), and improved video calls. The most visible 5G benefit today.</p></div>
+  <div class="card"><div class="card-label">Fixed Wireless Access (FWA)</div><p>5G as a home internet replacement. T-Mobile Home Internet and Verizon Home Internet serve millions of households — especially in underserved rural and suburban areas lacking fiber.</p></div>
+  <div class="card"><div class="card-label">Industrial &amp; Private Networks</div><p>Factories, ports, and warehouses deploy private 5G networks. BMW, Ford, and Amazon have deployed 5G on factory floors for real-time automation and asset tracking.</p></div>
+  <img class="slide-img" src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=800&q=80" alt="5G Smart City" onerror="this.style.display='none'">
   <div class="app-grid">
     <div class="app-pill"><div class="dot"></div>Smart Stadiums</div>
     <div class="app-pill"><div class="dot"></div>Precision Agriculture</div>
@@ -574,110 +275,48 @@
     <div class="app-pill"><div class="dot"></div>First Responder Comms</div>
     <div class="app-pill"><div class="dot"></div>Port Automation</div>
   </div>
-  <button class="notes-toggle" onclick="toggleNotes('n4')">Speaker Notes</button>
-  <div class="notes-box" id="n4">
-    <div class="notes-title">Speaker Notes</div>
-    <p>As of 2025, Fixed Wireless Access is one of the biggest commercial successes — T-Mobile has over 5 million FWA subscribers. Many of 5G's most transformative uses are still emerging; current commercial deployment is largely eMBB (fast phones) and FWA. Private 5G networks are growing rapidly in manufacturing — they allow secure, low-latency communication on the factory floor without relying on public carriers. The FirstNet network (AT&T) uses 5G for emergency services communications.</p>
-  </div>
 </div>
 
-<!-- ===== SLIDE 5: HEALTHCARE / AUTONOMOUS ===== -->
+<!-- SLIDE 5: HEALTHCARE -->
 <div class="slide" id="slide-5">
   <div class="slide-label">Section 2 — Current Applications (cont.)</div>
   <h2>Healthcare &amp; Mobility Today</h2>
+  <img class="slide-img" src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&q=80" alt="Telemedicine Technology" onerror="this.style.display='none'">
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">Telemedicine &amp; Remote Surgery</div>
-    <p>5G-enabled remote consultation is live across many health systems. In 2019, Chinese doctors performed the first 5G-assisted remote brain surgery. Real-time HD imaging and robotic tool control now possible over distance.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Connected Vehicles (V2X)</div>
-    <p>Vehicle-to-Everything (V2X) communication allows cars to talk to traffic lights, other vehicles, and infrastructure. Currently piloted in smart city projects in the US, Japan, and South Korea.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Smart Cities</div>
-    <p>Traffic management, smart lighting, environmental sensors, and emergency services coordination are active in cities including Singapore, Barcelona, and Columbus, Ohio (US DOT Smart City grant recipient).</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n5')">Speaker Notes</button>
-  <div class="notes-box" id="n5">
-    <div class="notes-title">Speaker Notes</div>
-    <p>The remote surgery example is a powerful illustration of 5G's latency advantage — traditional internet or 4G introduces enough delay to make precise robotic surgery dangerous. 5G's sub-millisecond latency essentially eliminates perceptible lag. V2X is still largely in pilot phases in the US but is further along in China and Europe. Smart cities face public acceptance challenges around data privacy — worth raising in discussion.</p>
-  </div>
+  <div class="card"><div class="card-label">Telemedicine &amp; Remote Surgery</div><p>5G-enabled remote consultation is live across many health systems. In 2019, Chinese doctors performed the first 5G-assisted remote brain surgery. Real-time HD imaging and robotic tool control now possible over distance.</p></div>
+  <div class="card"><div class="card-label">Connected Vehicles (V2X)</div><p>Vehicle-to-Everything (V2X) communication allows cars to talk to traffic lights, other vehicles, and infrastructure. Currently piloted in smart city projects in the US, Japan, and South Korea.</p></div>
+  <div class="card"><div class="card-label">Smart Cities</div><p>Traffic management, smart lighting, environmental sensors, and emergency services coordination are active in cities including Singapore, Barcelona, and Columbus, Ohio.</p></div>
 </div>
 
-<!-- ===== SLIDE 6: FUTURE APPLICATIONS ===== -->
+<!-- SLIDE 6: FUTURE -->
 <div class="slide" id="slide-6">
   <div class="slide-label">Section 3 — Future Applications</div>
-  <div class="section-header" data-num="3">
-    <div class="sh-label">What's Coming</div>
-    <h2>Future Commercial Applications</h2>
-  </div>
-  <div class="card">
-    <div class="card-label">Massive IoT (mIoT)</div>
-    <p>Billions of low-power sensors embedded in cities, agriculture, logistics, and homes. Analysts project 75+ billion connected IoT devices by 2030. 5G enables this density without network congestion.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Autonomous Vehicles (Level 4–5)</div>
-    <p>True self-driving at scale requires constant, low-latency map updates and V2X coordination. 5G (and its successor 6G) are seen as essential infrastructure for safe Level 4/5 autonomy beyond geofenced areas.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Extended Reality (XR) at Scale</div>
-    <p>Persistent augmented reality overlays on the physical world — navigation, workplace training, retail, and social interaction — require the bandwidth and latency only 5G/6G can deliver. Apple Vision Pro and Meta Quest represent early steps.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">AI + Edge Computing</div>
-    <p>AI inference offloaded to 5G edge servers rather than central cloud. Enables real-time AI in devices with minimal battery impact — the backbone of intelligent environments.</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n6')">Speaker Notes</button>
-  <div class="notes-box" id="n6">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Be transparent that some of these projections are speculative — timelines in technology often slip. The IoT projections come from Ericsson's Mobility Report and Cisco's Annual Internet Report. Level 5 autonomy (no human needed at all) remains elusive; most industry experts now project 2030+ for meaningful deployment. The XR/metaverse vision took a setback with Meta's losses, but the underlying technology trend remains. Edge computing is perhaps the most underappreciated aspect of 5G's potential — it fundamentally changes the economics of AI.</p>
-  </div>
+  <img class="slide-img" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80" alt="Autonomous Vehicle Technology" onerror="this.style.display='none'">
+  <div class="section-header" data-num="3"><div class="sh-label">What's Coming</div><h2>Future Commercial Applications</h2></div>
+  <div class="card"><div class="card-label">Massive IoT (mIoT)</div><p>Billions of low-power sensors embedded in cities, agriculture, logistics, and homes. Analysts project 75+ billion connected IoT devices by 2030. 5G enables this density without network congestion.</p></div>
+  <div class="card"><div class="card-label">Autonomous Vehicles (Level 4–5)</div><p>True self-driving at scale requires constant, low-latency map updates and V2X coordination. 5G is seen as essential infrastructure for safe Level 4/5 autonomy beyond geofenced areas.</p></div>
+  <div class="card"><div class="card-label">Extended Reality (XR) at Scale</div><p>Persistent augmented reality overlays on the physical world — navigation, workplace training, retail, and social interaction — require the bandwidth and latency only 5G/6G can deliver.</p></div>
+  <div class="card"><div class="card-label">AI + Edge Computing</div><p>AI inference offloaded to 5G edge servers rather than central cloud. Enables real-time AI in devices with minimal battery impact — the backbone of intelligent environments.</p></div>
 </div>
 
-<!-- ===== SLIDE 7: FUTURE cont. ===== -->
+<!-- SLIDE 7: FUTURE CONT -->
 <div class="slide" id="slide-7">
   <div class="slide-label">Section 3 — Future Applications (cont.)</div>
   <h2>Healthcare, Industry &amp; Beyond</h2>
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">Precision Medicine &amp; Remote Surgery</div>
-    <p>Widespread robotic surgery at distance, AI-assisted real-time diagnostics, continuous biometric monitoring through wearables and implants. Hospital-grade care potentially accessible in rural and developing regions.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Industry 4.0 / Smart Manufacturing</div>
-    <p>Fully automated "lights-out" factories with robotic systems, digital twins, and predictive maintenance. McKinsey projects Industry 4.0 could add $3.7 trillion in value annually by 2025.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Digital Divide: A Fork in the Road</div>
-    <h3></h3>
-    <p>5G could dramatically close the digital divide — or widen it. Low-band 5G can bring broadband-class connectivity to rural areas at lower cost than fiber. However, the most powerful mmWave 5G is concentrated in wealthy urban cores, potentially creating a two-tier digital society.</p>
-  </div>
-  <div class="highlight-box">
-    <p>⚠️ <strong>Note:</strong> 6G research is already underway (projected ~2030). Future applications attributed to "5G" may ultimately require 6G to fully realize.</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n7')">Speaker Notes</button>
-  <div class="notes-box" id="n7">
-    <div class="notes-title">Speaker Notes</div>
-    <p>The digital divide point is crucial for any audience considering equity and justice dimensions. Countries like Rwanda and Nigeria are investing heavily in 5G as a development leapfrog strategy — skipping costly fiber infrastructure. The McKinsey figure is from their "The Internet of Things: Mapping the Value Beyond the Hype" report. Acknowledge that 6G research at Samsung, NTT, and university labs suggests the 5G era may transition faster than expected.</p>
-  </div>
+  <div class="card"><div class="card-label">Precision Medicine &amp; Remote Surgery</div><p>Widespread robotic surgery at distance, AI-assisted real-time diagnostics, continuous biometric monitoring through wearables and implants. Hospital-grade care potentially accessible in rural and developing regions.</p></div>
+  <div class="card"><div class="card-label">Industry 4.0 / Smart Manufacturing</div><p>Fully automated "lights-out" factories with robotic systems, digital twins, and predictive maintenance. McKinsey projects Industry 4.0 could add $3.7 trillion in value annually by 2025.</p></div>
+  <div class="card"><div class="card-label">Digital Divide: A Fork in the Road</div><p>5G could dramatically close the digital divide — or widen it. Low-band 5G can bring broadband-class connectivity to rural areas at lower cost than fiber. However, mmWave 5G is concentrated in wealthy urban cores, potentially creating a two-tier digital society.</p></div>
+  <div class="highlight-box"><p>⚠️ <strong>Note:</strong> 6G research is already underway (projected ~2030). Future applications attributed to "5G" may ultimately require 6G to fully realize.</p></div>
 </div>
 
-<!-- ===== SLIDE 8: THEOLOGICAL INTRO ===== -->
+<!-- SLIDE 8: THEOLOGICAL INTRO -->
 <div class="slide" id="slide-8">
   <div class="slide-label">Section 4 — Theological Implications</div>
-  <div class="section-header" data-num="4">
-    <div class="sh-label">Faith &amp; Technology</div>
-    <h2>Theological Implications of 5G</h2>
-  </div>
-  <div class="pull-quote">
-    <p>"We do not live by bread alone." Technology shapes not only what we do, but who we become.</p>
-    <cite>— Matthew 4:4 (adapted reflection)</cite>
-  </div>
-  <div class="card">
-    <div class="card-label">The Framework</div>
-    <p>Technology is never theologically neutral. Every major communication revolution — the printing press, telegraph, radio, internet — has raised profound questions about human nature, community, justice, and our relationship with God. 5G is no different — and in its scope and pervasiveness, may raise these questions more urgently than any before it.</p>
-  </div>
+  <img class="slide-img" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80" alt="Technology and Faith" onerror="this.style.display='none'">
+  <div class="section-header" data-num="4"><div class="sh-label">Faith &amp; Technology</div><h2>Theological Implications of 5G</h2></div>
+  <div class="pull-quote"><p>"We do not live by bread alone." Technology shapes not only what we do, but who we become.</p><cite>— Matthew 4:4 (adapted reflection)</cite></div>
+  <div class="card"><div class="card-label">The Framework</div><p>Technology is never theologically neutral. Every major communication revolution — the printing press, telegraph, radio, internet — has raised profound questions about human nature, community, justice, and our relationship with God. 5G is no different.</p></div>
   <div class="app-grid">
     <div class="app-pill"><div class="dot"></div>Human Dignity</div>
     <div class="app-pill"><div class="dot"></div>Community &amp; Presence</div>
@@ -686,149 +325,66 @@
     <div class="app-pill"><div class="dot"></div>Creation Care</div>
     <div class="app-pill"><div class="dot"></div>Sabbath &amp; Rest</div>
   </div>
-  <button class="notes-toggle" onclick="toggleNotes('n8')">Speaker Notes</button>
-  <div class="notes-box" id="n8">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Frame this section carefully: the goal is not technophobia or technophilia, but theological discernment. Reference Albert Borgmann's "technology as device paradigm" or Neil Postman's "Technopoly" as frameworks if the audience is academic. For a general audience, simply note that Christians have always had to ask: "What does faithful engagement with this new power look like?" Consider drawing the parallel to how the Church had to theologically reckon with the printing press — which both democratized Scripture and spread heresy simultaneously.</p>
-  </div>
 </div>
 
-<!-- ===== SLIDE 9: HUMAN DIGNITY ===== -->
+<!-- SLIDE 9: HUMAN DIGNITY -->
 <div class="slide" id="slide-9">
   <div class="slide-label">Section 4 — Theological Implications</div>
   <h2>Human Dignity &amp; Surveillance</h2>
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">Imago Dei &amp; the Quantified Self</div>
-    <p>5G enables continuous biometric monitoring, behavioral prediction, and AI-driven profiling at unprecedented scale. The theological question: does the reduction of persons to data points violate the dignity inherent in being made in the image of God (<em>imago Dei</em>)?</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Surveillance Capitalism</div>
-    <p>5G massively expands the data harvested by tech platforms and governments. China's Social Credit System uses 5G-connected cameras and sensors to monitor citizens. Even in democracies, 5G enables commercial tracking of movement, relationships, and habits at a scale previously impossible.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Theological Response</div>
-    <ul>
-      <li>Every person possesses inherent dignity not contingent on data or productivity</li>
-      <li>Privacy is a precondition for authentic relationship — with each other and with God</li>
-      <li>The prophetic tradition consistently challenges systems that commodify persons</li>
-    </ul>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n9')">Speaker Notes</button>
-  <div class="notes-box" id="n9">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Shoshana Zuboff's "The Age of Surveillance Capitalism" is an excellent secular resource here. From a theological angle, Stanley Hauerwas and Walter Brueggemann both address the prophetic responsibility to name and resist dehumanizing systems. Note that the concern cuts across political lines — libertarians, progressives, and religious conservatives all share concerns about surveillance. The question isn't whether to use 5G, but what policies and ethical frameworks must govern it.</p>
-  </div>
+  <div class="card"><div class="card-label">Imago Dei &amp; the Quantified Self</div><p>5G enables continuous biometric monitoring, behavioral prediction, and AI-driven profiling at unprecedented scale. The theological question: does the reduction of persons to data points violate the dignity inherent in being made in the image of God (<em>imago Dei</em>)?</p></div>
+  <div class="card"><div class="card-label">Surveillance Capitalism</div><p>5G massively expands the data harvested by tech platforms and governments. China's Social Credit System uses 5G-connected cameras and sensors to monitor citizens. Even in democracies, 5G enables commercial tracking of movement, relationships, and habits at a scale previously impossible.</p></div>
+  <div class="card"><div class="card-label">Theological Response</div><ul><li>Every person possesses inherent dignity not contingent on data or productivity</li><li>Privacy is a precondition for authentic relationship — with each other and with God</li><li>The prophetic tradition consistently challenges systems that commodify persons</li></ul></div>
 </div>
 
-<!-- ===== SLIDE 10: COMMUNITY & PRESENCE ===== -->
+<!-- SLIDE 10: COMMUNITY -->
 <div class="slide" id="slide-10">
   <div class="slide-label">Section 4 — Theological Implications</div>
   <h2>Community, Presence &amp; Embodiment</h2>
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">The Body in the Digital Age</div>
-    <p>5G will power immersive augmented and virtual reality experiences that increasingly substitute for physical presence. Theologically, Christianity is an embodied religion — the Incarnation is central. What is lost when presence becomes virtual?</p>
-  </div>
-  <div class="card">
-    <div class="card-label">The Church in a Hyper-Connected World</div>
-    <p>The pandemic accelerated online worship. 5G will make it seamless, immersive, and global. But can sacramental life — Communion, Baptism, anointing — be mediated digitally? Denominations are actively debating this.</p>
-  </div>
-  <div class="pull-quote">
-    <p>"And the Word became flesh and dwelt among us." The Incarnation insists that presence — physical, embodied presence — matters.</p>
-    <cite>— John 1:14</cite>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n10')">Speaker Notes</button>
-  <div class="notes-box" id="n10">
-    <div class="notes-title">Speaker Notes</div>
-    <p>This is one of the most pastorally rich areas. Acknowledge the genuine good of connectivity for the homebound, geographically isolated, or disabled — 5G-enabled church participation for these groups is a genuine blessing. The tension is between accessibility and substitution. Draw on Dietrich Bonhoeffer's "Life Together" — Christian community is necessarily physical, local, and personal. John Dyer's "From the Garden to the City" is an excellent theological resource on technology and embodiment. Avoid being dismissive of digital ministry while being honest about its limitations.</p>
-  </div>
+  <div class="card"><div class="card-label">The Body in the Digital Age</div><p>5G will power immersive augmented and virtual reality experiences that increasingly substitute for physical presence. Theologically, Christianity is an embodied religion — the Incarnation is central. What is lost when presence becomes virtual?</p></div>
+  <div class="card"><div class="card-label">The Church in a Hyper-Connected World</div><p>The pandemic accelerated online worship. 5G will make it seamless, immersive, and global. But can sacramental life — Communion, Baptism, anointing — be mediated digitally? Denominations are actively debating this.</p></div>
+  <div class="pull-quote"><p>"And the Word became flesh and dwelt among us." The Incarnation insists that presence — physical, embodied presence — matters.</p><cite>— John 1:14</cite></div>
 </div>
 
-<!-- ===== SLIDE 11: JUSTICE & CREATION ===== -->
+<!-- SLIDE 11: JUSTICE -->
 <div class="slide" id="slide-11">
   <div class="slide-label">Section 4 — Theological Implications</div>
   <h2>Justice, Equity &amp; Creation Care</h2>
+  <img class="slide-img" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=800&q=80" alt="Digital Equity" onerror="this.style.display='none'">
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">Digital Justice</div>
-    <p>If 5G becomes essential infrastructure — for employment, healthcare, education — then access to it becomes a justice issue. Theologically, the consistent biblical concern for the poor and marginalized demands that we ask: who gets 5G, and who is left out?</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Geopolitics &amp; Power</div>
-    <p>The US-China competition over 5G infrastructure (Huawei vs. Western carriers) is fundamentally a competition over who controls the nervous system of global society. Theological ethics must grapple with questions of power, national interest, and global common good.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Environmental Stewardship</div>
-    <p>5G requires millions of new small-cell base stations globally. Energy consumption of data centers and wireless networks is already ~2% of global electricity. 5G networks can be more energy-efficient per bit — but overall data demand will grow dramatically. Creation care demands honest accounting.</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n11')">Speaker Notes</button>
-  <div class="notes-box" id="n11">
-    <div class="notes-title">Speaker Notes</div>
-    <p>The justice dimension connects directly to Amos, Micah, and Luke's "preferential option for the poor." The FCC's rural broadband programs and the Biden-era Infrastructure Bill's $65B broadband investment represent government recognition that connectivity is now infrastructure. From a creation care perspective, cite the Lausanne Movement's "Creation Care" commitment or Pope Francis' Laudato Si'. Note that 5G networks can also enable environmental monitoring and smart energy grids — technology itself is not the enemy of creation care.</p>
-  </div>
+  <div class="card"><div class="card-label">Digital Justice</div><p>If 5G becomes essential infrastructure — for employment, healthcare, education — then access to it becomes a justice issue. Theologically, the consistent biblical concern for the poor and marginalized demands that we ask: who gets 5G, and who is left out?</p></div>
+  <div class="card"><div class="card-label">Geopolitics &amp; Power</div><p>The US-China competition over 5G infrastructure (Huawei vs. Western carriers) is fundamentally a competition over who controls the nervous system of global society. Theological ethics must grapple with questions of power, national interest, and global common good.</p></div>
+  <div class="card"><div class="card-label">Environmental Stewardship</div><p>5G requires millions of new small-cell base stations globally. Energy consumption of data centers and wireless networks is already ~2% of global electricity. Creation care demands honest accounting.</p></div>
 </div>
 
-<!-- ===== SLIDE 12: SABBATH & POWER ===== -->
+<!-- SLIDE 12: SABBATH -->
 <div class="slide" id="slide-12">
   <div class="slide-label">Section 4 — Theological Implications</div>
   <h2>Sabbath, Rest &amp; the Pace of Life</h2>
   <div class="divider"></div>
-  <div class="card">
-    <div class="card-label">Always-On Culture</div>
-    <p>5G promises near-zero latency and universal connectivity. The cultural result may be the final elimination of "offline" as a concept. The theological tradition of Sabbath — deliberate, structured rest and disconnection — stands in direct tension with a 5G world.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">The Sabbath as Resistance</div>
-    <p>Walter Brueggemann argues that Sabbath is inherently countercultural — a refusal to be defined by productivity and consumption. In a 5G world of infinite connectivity, the intentional practice of digital Sabbath becomes an act of theological resistance and human flourishing.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Attention as a Spiritual Resource</div>
-    <p>5G enables more apps, more notifications, more content, more demands on attention. Theologians and psychologists increasingly agree: attention is the site of spiritual formation. Who controls our attention controls our souls. 5G massively intensifies this competition.</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n12')">Speaker Notes</button>
-  <div class="notes-box" id="n12">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Reference Brueggemann's "Sabbath as Resistance" directly — it's accessible and profound. The "attention economy" framing comes from tech ethicist Tristan Harris (Center for Humane Technology). From a spiritual direction perspective, Ignatius of Loyola's "discernment of spirits" and contemporary writers like Andy Crouch ("The Tech-Wise Family") offer practical wisdom. Invite the audience: what does a digital Sabbath look like for your family or community? This is the most personally actionable theological implication.</p>
-  </div>
+  <div class="card"><div class="card-label">Always-On Culture</div><p>5G promises near-zero latency and universal connectivity. The cultural result may be the final elimination of "offline" as a concept. The theological tradition of Sabbath — deliberate, structured rest and disconnection — stands in direct tension with a 5G world.</p></div>
+  <div class="card"><div class="card-label">The Sabbath as Resistance</div><p>Walter Brueggemann argues that Sabbath is inherently countercultural — a refusal to be defined by productivity and consumption. In a 5G world of infinite connectivity, the intentional practice of digital Sabbath becomes an act of theological resistance and human flourishing.</p></div>
+  <div class="card"><div class="card-label">Attention as a Spiritual Resource</div><p>5G enables more apps, more notifications, more content, more demands on attention. Theologians and psychologists increasingly agree: attention is the site of spiritual formation. Who controls our attention controls our souls. 5G massively intensifies this competition.</p></div>
 </div>
 
-<!-- ===== SLIDE 13: CONCLUSION ===== -->
+<!-- SLIDE 13: CONCLUSION -->
 <div class="slide" id="slide-13">
   <div class="slide-label">Conclusion</div>
-  <div class="section-header" data-num="">
-    <div class="sh-label">Synthesis</div>
-    <h2>Faithful Engagement with 5G</h2>
-  </div>
-  <div class="card">
-    <div class="card-label">Neither Fear Nor Uncritical Embrace</div>
-    <p>5G is neither savior nor demon. It is a powerful amplifier — of human creativity and human brokenness alike. Faithful engagement means neither technophobia nor technophilia, but discerning stewardship.</p>
-  </div>
-  <div class="card">
-    <div class="card-label">Key Theological Commitments</div>
-    <ul>
-      <li><strong>Human dignity</strong> over data commodification</li>
-      <li><strong>Embodied community</strong> alongside digital connection</li>
-      <li><strong>Justice</strong> in access and governance</li>
-      <li><strong>Creation care</strong> in deployment and use</li>
-      <li><strong>Sabbath</strong> as deliberate counterformation</li>
-    </ul>
-  </div>
-  <div class="pull-quote">
-    <p>"Do not conform to the pattern of this world, but be transformed by the renewing of your mind."</p>
-    <cite>— Romans 12:2</cite>
-  </div>
-  <div class="highlight-box">
-    <p>💬 <strong>Discussion:</strong> Which theological implication do you find most urgent for your community? What would faithful 5G use look like in your context?</p>
-  </div>
-  <button class="notes-toggle" onclick="toggleNotes('n13')">Speaker Notes</button>
-  <div class="notes-box" id="n13">
-    <div class="notes-title">Speaker Notes</div>
-    <p>Close by returning to the central framework: the question is not whether to use 5G, but how to use it wisely. Recommend resources: Andy Crouch's "The Tech-Wise Family," Shoshana Zuboff's "The Age of Surveillance Capitalism," and Walter Brueggemann's "Sabbath as Resistance." Invite discussion — these are unresolved questions the Church must work through together. End with prayer if appropriate to the context, asking for wisdom and discernment in stewarding the powerful tools of this generation.</p>
-  </div>
+  <div class="section-header" data-num=""><div class="sh-label">Synthesis</div><h2>Faithful Engagement with 5G</h2></div>
+  <div class="card"><div class="card-label">Neither Fear Nor Uncritical Embrace</div><p>5G is neither savior nor demon. It is a powerful amplifier — of human creativity and human brokenness alike. Faithful engagement means neither technophobia nor technophilia, but discerning stewardship.</p></div>
+  <div class="card"><div class="card-label">Key Theological Commitments</div><ul>
+    <li><strong>Human dignity</strong> over data commodification</li>
+    <li><strong>Embodied community</strong> alongside digital connection</li>
+    <li><strong>Justice</strong> in access and governance</li>
+    <li><strong>Creation care</strong> in deployment and use</li>
+    <li><strong>Sabbath</strong> as deliberate counterformation</li>
+  </ul></div>
+  <div class="pull-quote"><p>"Do not conform to the pattern of this world, but be transformed by the renewing of your mind."</p><cite>— Romans 12:2</cite></div>
+  <div class="highlight-box"><p>💬 <strong>Discussion:</strong> Which theological implication do you find most urgent for your community? What would faithful 5G use look like in your context?</p></div>
 </div>
 
-<!-- NAVIGATION BAR -->
+<!-- NAV -->
 <div id="nav">
   <button id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
   <span id="slide-counter">1 / 13</span>
@@ -839,22 +395,107 @@
   let current = 1;
   const total = 13;
 
+  // Progress bar
+  function updateProgress() {
+    document.getElementById('progress-bar').style.width = ((current / total) * 100) + '%';
+  }
+
+  // Counter animation
+  function animateCounters() {
+    document.querySelectorAll('#slide-' + current + ' .counter').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      let count = 0;
+      const step = Math.ceil(target / 20);
+      const timer = setInterval(() => {
+        count = Math.min(count + step, target);
+        el.textContent = count;
+        if (count >= target) clearInterval(timer);
+      }, 50);
+    });
+  }
+
+  // Particles on title slide
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animFrame;
+
+  function initParticles() {
+    canvas.style.display = 'block';
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particles = Array.from({length: 60}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 2 + 1
+    }));
+    animateParticles();
+  }
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(200,131,42,0.4)';
+      ctx.fill();
+    });
+    particles.forEach((p, i) => {
+      particles.slice(i+1).forEach(q => {
+        const d = Math.hypot(p.x - q.x, p.y - q.y);
+        if (d < 100) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(200,131,42,${0.15 * (1 - d/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+    animFrame = requestAnimationFrame(animateParticles);
+  }
+
+  function stopParticles() {
+    cancelAnimationFrame(animFrame);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.style.display = 'none';
+  }
+
   function changeSlide(dir) {
-    document.getElementById('slide-' + current).classList.remove('active');
+    const prev = document.getElementById('slide-' + current);
+    prev.classList.remove('active');
+
+    if (current === 1) stopParticles();
+
     current += dir;
-    document.getElementById('slide-' + current).classList.add('active');
+
+    const next = document.getElementById('slide-' + current);
+    next.classList.add('active');
+
     document.getElementById('slide-counter').textContent = current + ' / ' + total;
     document.getElementById('prevBtn').disabled = current === 1;
     document.getElementById('nextBtn').disabled = current === total;
+
+    updateProgress();
+    animateCounters();
     window.scrollTo(0, 0);
+
+    if (current === 1) initParticles();
   }
 
-  function toggleNotes(id) {
-    const box = document.getElementById(id);
-    box.classList.toggle('open');
-  }
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' && current < total) changeSlide(1);
+    if (e.key === 'ArrowLeft' && current > 1) changeSlide(-1);
+  });
 
-  // Swipe support for mobile
+  // Swipe
   let touchStartX = 0;
   document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
   document.addEventListener('touchend', e => {
@@ -864,6 +505,10 @@
       if (dx > 0 && current > 1) changeSlide(-1);
     }
   });
+
+  // Init
+  updateProgress();
+  initParticles();
 </script>
 </body>
 </html>
